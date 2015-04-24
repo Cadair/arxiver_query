@@ -3,7 +3,6 @@ import urllib
 import os
 import sys
 import random
-from wordpress_xmlrpc import Client, WordPressPost
 from numpy import *
 from scipy import misc
 from matplotlib import rc
