@@ -2,83 +2,40 @@
 # Imports
 #----------------------------------------------------------------------------#
 
-from flask import Flask, render_template, request
-# from flask.ext.sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, send_from_directory
+
 import logging
 from logging import Formatter, FileHandler
-from forms import *
 
+import arxiverfunc
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
 
 app = Flask(__name__)
 app.config.from_object('config')
-#db = SQLAlchemy(app)
 
-# Automatically tear down SQLAlchemy.
-'''
-@app.teardown_request
-def shutdown_session(exception=None):
-    db_session.remove()
-'''
-
-# Login required decorator.
-'''
-def login_required(test):
-    @wraps(test)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return test(*args, **kwargs)
-        else:
-            flash('You need to login first.')
-            return redirect(url_for('login'))
-    return wrap
-'''
 #----------------------------------------------------------------------------#
 # Controllers.
 #----------------------------------------------------------------------------#
 
-
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def home():
-    return render_template('pages/placeholder.home.html')
+    idname = request.args.get('id')
+    if idname:
+        data = arxiverfunc.arxiverprocess(idname)
+#        data = {'fig1': 'temp/1306.3227_f6.jpg',
+#                'fig2': 'hello',
+#                'fig3': 'bye'}
+        print(data)
+        return render_template('pages/home.html', adata=data)
+    return render_template('pages/home.html')
 
+@app.route('/temp/<path:path>')
+def files(path):
+    print(path)
+    return send_from_directory('./temp/', path)
 
-@app.route('/about')
-def about():
-    return render_template('pages/placeholder.about.html')
-
-
-@app.route('/login')
-def login():
-    form = LoginForm(request.form)
-    return render_template('forms/login.html', form=form)
-
-
-@app.route('/register')
-def register():
-    form = RegisterForm(request.form)
-    return render_template('forms/register.html', form=form)
-
-
-@app.route('/forgot')
-def forgot():
-    form = ForgotForm(request.form)
-    return render_template('forms/forgot.html', form=form)
-
-# Error handlers.
-
-
-@app.errorhandler(500)
-def internal_error(error):
-    #db_session.rollback()
-    return render_template('errors/500.html'), 500
-
-
-@app.errorhandler(404)
-def not_found_error(error):
-    return render_template('errors/404.html'), 404
 
 if not app.debug:
     file_handler = FileHandler('error.log')

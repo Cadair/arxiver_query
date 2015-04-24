@@ -1,0 +1,14 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>Your Images are:</h1>
+</div>
+
+{% if adata is defined %}
+    <img src="{{ adata.fig0 }}">
+    <img src="{{ adata.fig1 }}">
+    <img src="{{ adata.fig2 }}">
+{% endif %}
+{% endblock %}
