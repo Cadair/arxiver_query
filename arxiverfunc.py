@@ -13,6 +13,7 @@ import unicodedata
 import re
 import time
 import logging
+import platform
 
 
 def arxiverprocess(idname):
@@ -20,6 +21,9 @@ def arxiverprocess(idname):
     # Make and delete temp dir
     os.system('rm -rf temp')
     os.system('mkdir temp')
+
+    # Check architecture
+    archit = platform.platform().lower()
 
     #idname = "1306.3227"
 
@@ -141,8 +145,10 @@ def arxiverprocess(idname):
                     retval = os.system('pdfcrop %s' % fname)
                     if (retval < 0):
                         continue
-                    retval = os.system('convert -resize 1024 -density 200 -background white -flatten %s temp/%s_f%i.jpg' % (fname.split('.pdf')[0]+'-crop.pdf',linkformat,(ipip+1)))
-                    #retval = os.system('sips -Z 1024 -s format jpeg %s --out temp/%s_f%i.jpg' % (fname.split('.pdf')[0]+'-crop.pdf',linkformat,(ipip+1)))
+                    if 'linux' in archit:
+                        retval = os.system('convert -resize 1024 -density 200 -background white -flatten %s temp/%s_f%i.jpg' % (fname.split('.pdf')[0]+'-crop.pdf',linkformat,(ipip+1)))
+                    if 'darwin' in archit:
+                        retval = os.system('sips -Z 1024 -s format jpeg %s --out temp/%s_f%i.jpg' % (fname.split('.pdf')[0]+'-crop.pdf',linkformat,(ipip+1)))
                     if (retval < 0):
                         continue
                     figures.append('temp/%s_f%i.jpg' % (linkformat,(ipip+1)))
@@ -157,8 +163,10 @@ def arxiverprocess(idname):
                     retval = os.system('pdfcrop %s' % (fname.split('.eps')[0]+'.pdf'))
                     if (retval < 0):
                         continue
-                    retval = os.system('convert -resize 1024 -density 200 -background white -flatten %s temp/%s_f%i.jpg' % (fname.split('.eps')[0]+'-crop.pdf',linkformat,(ipip+1)))
-                    #retval = os.system('sips -Z 1024 -s format jpeg %s --out temp/%s_f%i.jpg' % (fname.split('.eps')[0]+'-crop.pdf',linkformat,(ipip+1)))
+                    if 'linux' in archit:
+                        retval = os.system('convert -resize 1024 -density 200 -background white -flatten %s temp/%s_f%i.jpg' % (fname.split('.eps')[0]+'-crop.pdf',linkformat,(ipip+1)))
+                    if 'darwin' in archit:
+                        retval = os.system('sips -Z 1024 -s format jpeg %s --out temp/%s_f%i.jpg' % (fname.split('.eps')[0]+'-crop.pdf',linkformat,(ipip+1)))
                     if (retval < 0):
                         continue
                     figures.append('temp/%s_f%i.jpg' % (linkformat,(ipip+1)))
@@ -176,8 +184,10 @@ def arxiverprocess(idname):
                     retval = os.system('pdfcrop temp/f%i.pdf' % (ipip+1))
                     if (retval < 0):
                         continue
-                    retval = os.system('convert -resize 1024 -density 200 -background white -flatten temp/f%i-crop.pdf temp/%s_f%i.jpg' % ((ipip+1),linkformat,(ipip+1)))
-                    #retval = os.system('sips -Z 1024 -s format jpeg temp/f%i-crop.pdf --out temp/%s_f%i.jpg' % ((ipip+1),linkformat,(ipip+1)))
+                    if 'linux' in archit:
+                        retval = os.system('convert -resize 1024 -density 200 -background white -flatten temp/f%i-crop.pdf temp/%s_f%i.jpg' % ((ipip+1),linkformat,(ipip+1)))
+                    if 'darwin' in archit:
+                        retval = os.system('sips -Z 1024 -s format jpeg temp/f%i-crop.pdf --out temp/%s_f%i.jpg' % ((ipip+1),linkformat,(ipip+1)))
                     if (retval < 0):
                         continue
                     figures.append('temp/%s_f%i.jpg' % (linkformat,(ipip+1)))
@@ -186,8 +196,10 @@ def arxiverprocess(idname):
 
                     # Convert to jpg
                     retval = 0
-                    retval = os.system('convert -resize 1024 -density 200 -background white -flatten %s temp/%s_f%i.jpg' % (fname,linkformat,(ipip+1)))
-                    #retval = os.system('sips -Z 1024 -s format jpeg %s --out temp/%s_f%i.jpg' % (fname,linkformat,(i+1)))
+                    if 'linux' in archit:
+                        retval = os.system('convert -resize 1024 -density 200 -background white -flatten %s temp/%s_f%i.jpg' % (fname,linkformat,(ipip+1)))
+                    if 'darwin' in archit:
+                        retval = os.system('sips -Z 1024 -s format jpeg %s --out temp/%s_f%i.jpg' % (fname,linkformat,(i+1)))
                     if (retval < 0):
                         continue
                     figures.append('temp/%s_f%i.jpg' % (linkformat,(ipip+1)))
